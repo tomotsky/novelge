@@ -2,15 +2,22 @@
 
 const http = require('http');
 const pug = require('pug');
+
 const server = http.createServer((req, res) => {
   res.writeHead(200, {
     'Content-Type': 'text/html; charset=utf-8'
   });
 
+  if ((req.url) === '/' && (req.method) === 'GET') {
+    res.write(pug.renderFile('./views/startpage.pug'));
+    res.end();
+  } else {
+    res.write(pug.renderFile('./views/mainview.pug'));
+    res.end();
+  }
+
   switch (req.method) {
     case 'GET':
-      res.write(pug.renderFile('./views/startpage.pug'));
-      res.end();
       break;
     case 'POST':
       let rawData = '';
