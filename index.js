@@ -1,38 +1,28 @@
 'use strict';
 
 const http = require('http');
-const pug = require('pug');
+const handler = require('./handler');
 
 const server = http.createServer((req, res) => {
-  res.writeHead(200, {
-    'Content-Type': 'text/html; charset=utf-8'
-  });
-
-  if ((req.url) === '/' && (req.method) === 'GET') {
-    res.write(pug.renderFile('./views/startpage.pug'));
-    res.end();
-  } else {
-    res.write(pug.renderFile('./views/mainview.pug'));
-    res.end();
-  }
-
-  switch (req.method) {
-    case 'GET':
+  switch (req.url) {
+    case '/':
+      handler.startView(req, res);
       break;
-    case 'POST':
-      let rawData = '';
-      req.on('data', chunk => {
-        rawData = rawData + chunk;
-      }).on('end', () => {
-        const qs = require('querystring');
-        const decoded = decodeURIComponent(rawData);
-        const username = qs.parse(decoded)['name'];
-        res.end(username);
-      });
+    case '/favicon.ico':
+      handler.favicon(req, res);
       break;
     default:
+      if (parseInt((req.url).replace('/', ''))) {
+        handler.storyView(req, res);
+      } else {
+        handler.notFound(req, res);
+      }
       break;
   }
+}).on('error', e => {
+  console.error('Server Error', e);
+}).on('clientError', e => {
+  console.error('Client Error', e);
 });
 
 const port = 8000;

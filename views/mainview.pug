@@ -4,8 +4,10 @@ html(lang="ja")
     meta(charset="UTF-8")
     title ノベルゲー
   body
-    div.mainimage
-      img(src="image/dummy.jpg", width=640, height=480)
-    div.answers
-      p こんにちは
+    #mainimage
+      img(src="#{image}", width=640, height=480)
+    #answers
+      p.message #{message}
+      each answer in answers
+        p.answer #{answer.answer}
     
