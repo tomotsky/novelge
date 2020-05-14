@@ -3,9 +3,10 @@ html(lang="ja")
   head
     meta(charset="UTF-8")
     title ノベルゲー
+    link(rel="stylesheet", href="./views/style.css")
   body
     #mainimage
-      img(src="#{image}", width=640, height=480)
+      img(src="./image/dummy.jpg", width=640, height=480)
     #answers
       p.message #{message}
       each answer in answers

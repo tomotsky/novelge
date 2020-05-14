@@ -4,6 +4,8 @@ const pug = require('pug');
 const fs = require('fs');
 const scenario = require('./scenario');
 
+let username = '';
+
 function startView(req, res) {
   if ((req.method) === 'GET') {
     res.end(pug.renderFile('./views/startpage.pug'));
@@ -14,10 +16,9 @@ function startView(req, res) {
     }).on('end', () => {
       const qs = require('querystring');
       const decoded = decodeURIComponent(rawData);
-      const username = qs.parse(decoded)['name'];
+      username = qs.parse(decoded)['name'];
       res.writeHead(302, {
-        Location: '/1',
-        username: username
+        Location: '/1'
       });
       res.end();
     });
@@ -30,13 +31,19 @@ function storyView(req, res) {
   console.log(req.url);
   console.log(viewNum);
   // 数字のシーンを取得して渡す
-  const scene = scenario.getScene(viewNum);
-  res.end(pug.renderFile('./views/mainview.pug', {
-    image: fs.readFileSync(`./image/${scene.image}`),
-    message: scene.message,
-    answers: scene.answers,
-    end: scene.end
-  }));
+  const scene = scenario.getScene(viewNum, username);
+  if (scene !== null) {
+    res.end(pug.renderFile('./views/mainview.pug', {
+      username: username,
+      image: fs.readFileSync(`./image/${scene.image}`),
+      message: scene.message,
+      answers: scene.answers,
+      end: scene.end
+    }));
+  } else {
+    notFound(req, res);
+  }
+  // console.log(username);
 }
 
 function favicon(req, res) {
