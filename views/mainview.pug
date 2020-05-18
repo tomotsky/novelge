@@ -5,10 +5,12 @@ html(lang="ja")
     title ノベルゲー
     link(rel="stylesheet", href="./views/style.css")
   body
+    h1 あっという間に終わるノベルゲーム
     #mainimage
-      img(src="./image/dummy.jpg", width=640, height=480)
-    #answers
+      img.image(src=image)
       p.message #{message}
+    #answers
       each answer in answers
-        p.answer #{answer.answer}
+        .answer(style={"background-color": answer.bgcolor, color: answer.textcolor}) #{answer.answer}
+          a(href=answer.goto)
     

@@ -1,0 +1,8 @@
+{
+  "name": "novelge",
+  "description": "あっという間に終わるノベルゲーム",
+  "repository": "https://github.com/tomotsky/novelge",
+  "logo": "",
+  "keywords": ["node"],
+  "image": "heroku/nodejs"
+}

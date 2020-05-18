@@ -1,6 +1,7 @@
 'use strict';
 
 const http = require('http');
+const fs = require('fs');
 const handler = require('./handler');
 
 const server = http.createServer((req, res) => {
@@ -8,11 +9,21 @@ const server = http.createServer((req, res) => {
     case '/':
       handler.startView(req, res);
       break;
+    case '/views/style.css':
+      res.writeHead(200, {
+        "Content-Type": "text/css"
+      });
+      const data = fs.readFileSync('./views/style.css', 'UTF-8');
+      res.end(data);
+      break;
     case '/favicon.ico':
-      handler.favicon(req, res);
+      res.writeHead(200);
+      res.end();
       break;
     default:
-      if (parseInt((req.url).replace('/', ''))) {
+      if (req.url.match(/image/)) {
+        handler.readImage(req, res);
+      } else if (parseInt((req.url).replace('/', ''))) {
         handler.storyView(req, res);
       } else {
         handler.notFound(req, res);
@@ -25,7 +36,7 @@ const server = http.createServer((req, res) => {
   console.error('Client Error', e);
 });
 
-const port = 8000;
+const port = process.env.PORT || 8000;
 server.listen(port, () => {
   console.log('Listening on ' + port);
 });

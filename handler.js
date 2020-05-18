@@ -8,6 +8,9 @@ let username = '';
 
 function startView(req, res) {
   if ((req.method) === 'GET') {
+    res.writeHead(200, {
+      "Content-Type": "text/html"
+    });
     res.end(pug.renderFile('./views/startpage.pug'));
   } else if ((req.method) === 'POST') {
     let rawData = '';
@@ -26,16 +29,15 @@ function startView(req, res) {
 }
 
 function storyView(req, res) {
-  //req.urlで数字を取得
   const viewNum = parseInt((req.url).replace('/', ''));
-  console.log(req.url);
-  console.log(viewNum);
-  // 数字のシーンを取得して渡す
   const scene = scenario.getScene(viewNum, username);
   if (scene !== null) {
+    res.writeHead(200, {
+      "Content-Type": "text/html"
+    });
     res.end(pug.renderFile('./views/mainview.pug', {
       username: username,
-      image: fs.readFileSync(`./image/${scene.image}`),
+      image: `./image/${scene.image}`,
       message: scene.message,
       answers: scene.answers,
       end: scene.end
@@ -43,16 +45,14 @@ function storyView(req, res) {
   } else {
     notFound(req, res);
   }
-  // console.log(username);
 }
 
-function favicon(req, res) {
+function readImage(req, res) {
   res.writeHead(200, {
-    'Content-Type': 'image/vnd.microsoft.icon'
+    "Content-Type": "image/jpeg"
   });
-  //const favicon = fs.readFileSync('./favicon.ico');
-  //res.end(favicon);
-  res.end();
+  const image = fs.readFileSync(`.${req.url}`, 'binary');
+  res.end(image, 'binary');
 }
 
 function notFound(req, res) {
@@ -65,6 +65,6 @@ function notFound(req, res) {
 module.exports = {
   startView,
   storyView,
-  favicon,
+  readImage,
   notFound
 }
