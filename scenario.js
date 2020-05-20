@@ -23,21 +23,23 @@ const scenario = [
 ];
 
 function getScene(n, username) {
+  let result = {};
   for (const scene of scenario) {
     if (scene.id === n) {
-      scene.message = scene.message.replace('${username}', username);
+      result = JSON.parse(JSON.stringify(scene)); 
+      result.message = scene.message.replace('${username}', username);
       if (scene.end) {
-        scene.answers = [];
-        scene.answers.push({answer: '最初に戻る', goto: '/', textcolor: 'white', bgcolor: 'red'});
+        result.answers = [];
+        result.answers.push({answer: '最初に戻る', goto: '/', textcolor: 'white', bgcolor: 'red'});
       } else {
         const bgcolors = ['peachpuff', 'paleturquoise', 'palegreen', 'pink', 'thistle'];
-        for (let i = 0; i < scene.answers.length; i++) {
-          scene.answers[i].answer = scene.answers[i].answer.replace('${username}', username);
-          scene.answers[i].bgcolor = bgcolors[i % bgcolors.length];
-          scene.answers[i].textcolor = 'black';
+        for (let i = 0; i < result.answers.length; i++) {
+          result.answers[i].answer = scene.answers[i].answer.replace('${username}', username);
+          result.answers[i].bgcolor = bgcolors[i % bgcolors.length];
+          result.answers[i].textcolor = 'black';
         }
       }
-      return scene;
+      return result;
     }
   }
   return null;
